@@ -25,7 +25,7 @@
 	</div>
 	<script type="text/javascript">
 		var canvas = null, ctx = null, x = 0, y = 0;
-		var lastPress = 65, speed = 5, player = null, food =null, Score = 0,rand = 0;
+		var lastPress = 65, speed = 5, player = null, food =null, Score = 0,rand = 0, pause = false;
 
 		window.requestAnimationFrame = (function(){
 			return window.requestAnimationFrame ||
@@ -53,15 +53,30 @@
 			ctx.fillStyle= "green";
 			ctx.font = "20px times new roman";
 			ctx.fillText("Score:   "+Score,canvas.width-100,15);
+
+			if(pause){
+				ctx.fillStyle= "green";
+				ctx.textAling= "center";
+				ctx.font = "50px times new roman";
+				ctx.fillText("PAUSE",150,120);
+				ctx.font = "10px times new roman";
+				ctx.fillText("MUEVETE PARA CONTINUAR",160,140);
+			}
 			// ctx.fillStyle = "#0f0";
 			// ctx.fillRect(x,y,10,10);
 		}
 
 		function act(){
 
+			if(lastPress == 32){ //Pause
+				player.x -= 0;
+				player.y -= 0;
+				pause = true;
+			}
 
 			if(lastPress==65 || lastPress == 37){ //izquierda
 				player.x -= speed;
+				pause = false;
 				if (player.x < 0 ) {
 					player.x = canvas.width;
 				}
@@ -69,6 +84,7 @@
 
 			if(lastPress==68 || lastPress == 39){ //derecha
 				player.x += speed;
+				pause = false;
 				if(player.x > canvas.width){
 					player.x = -10;
 				}
@@ -76,6 +92,7 @@
 
 			if(lastPress==87 || lastPress == 38){ //arriba
 				player.y -= speed;
+				pause = false;
 				if (player.y < 20) {
 					player.y = canvas.height;
 				}
@@ -83,6 +100,7 @@
 
 			if(lastPress==83 || lastPress == 40){ //abajo
 				player.y += speed;
+				pause = false;
 				if (player.y > canvas.height) {
 					player.y = 20;
 				}
@@ -121,7 +139,7 @@
 		window.addEventListener('load',init,false);
 
 		document.addEventListener('keydown',function(e){
-			if(e.keyCode==65 || e.keyCode ==  37 || e.keyCode ==  68 || e.keyCode ==  39 || e.keyCode ==  87 || e.keyCode ==  38 || e.keyCode ==  83 || e.keyCode ==  40 )
+			if(e.keyCode==65 || e.keyCode ==  32 || e.keyCode ==  37 || e.keyCode ==  68 || e.keyCode ==  39 || e.keyCode ==  87 || e.keyCode ==  38 || e.keyCode ==  83 || e.keyCode ==  40 )
 				lastPress = e.keyCode;
 		})
 
