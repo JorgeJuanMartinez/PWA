@@ -25,7 +25,8 @@
 	</div>
 	<script type="text/javascript">
 		var canvas = null, ctx = null, x = 0, y = 0;
-		var lastPress = 65, speed = 5, player = null, food =null, Score = 0,rand = 0, pause = false;
+		var lastPress = 65, speed = 5, player = null,
+		food =null, walls=new Array(),wall=null, Score = 0,rand = 0, pause = false, Game=true;
 
 		window.requestAnimationFrame = (function(){
 			return window.requestAnimationFrame ||
@@ -47,12 +48,20 @@
 			ctx.fillStyle = "red";
 			food.paint(ctx);
 
+			ctx.fillStyle = "white";
+			wall.paint(ctx);
+
 			ctx.fillStyle= "green";
 			ctx.fillRect(0,20,canvas.width,1);
 
 			ctx.fillStyle= "green";
 			ctx.font = "20px times new roman";
 			ctx.fillText("Score:   "+Score,canvas.width-100,15);
+
+			ctx.fillStyle ="white";
+			for(var i = walls.length - 1; i >= 0; i--){
+					walls[i].paint(ctx);
+			}
 
 			if(pause){
 				ctx.fillStyle= "green";
@@ -62,15 +71,22 @@
 				ctx.font = "10px times new roman";
 				ctx.fillText("MUEVETE PARA CONTINUAR",160,140);
 			}
+			if(!Game){
+				ctx.fillStyle= "green";
+				ctx.textAling= "center";
+				ctx.font = "50px times new roman";
+				ctx.fillText("GAME OVER",110,120);
+				ctx.font = "10px times new roman";
+				ctx.fillText("RECARGA PARA VOLVER A EMPEZAR",160,140);
+			}
 			// ctx.fillStyle = "#0f0";
 			// ctx.fillRect(x,y,10,10);
 		}
 
 		function act(){
 
-			if(lastPress == 32){ //Pause
-				player.x -= 0;
-				player.y -= 0;
+			if(lastPress == 32 && Game){ //Pause
+				lastPress= null;
 				pause = true;
 			}
 
@@ -115,10 +131,18 @@
 				else{
 					food.y = rand ;
 				}
-
+				speed+= 1;
 				Score+= 5;
 			}
+
+			for(var i = walls.length - 1; i >= 0; i--){
+					if(player.intersects(walls[i])){
+						Game = false;
+						lastPress= null;
+					}
+			}
 		}
+
 
 		function run(){
 			window.requestAnimationFrame(run);
@@ -132,6 +156,11 @@
 
 			player = new Rectangle(0,20,10,10);
 			food = new Rectangle(70,50,10,10);
+
+			walls.push(wall= new Rectangle(20,30,10,10));
+			walls.push(wall= new Rectangle(20,230,10,10));
+			walls.push(wall= new Rectangle(400,30,10,10));
+			walls.push(wall= new Rectangle(400,230,10,10));
 
 			run();
 		}
