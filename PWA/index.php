@@ -29,7 +29,7 @@
 		food =null, walls=new Array(),wall=null, Score = 0,
 		rand = 0, pause = false, Game=true;
 		var body = new Image(), apple= new Image();
-		var eat = new Audio(), end = new Audio, ps = new Audio()
+		var eat = new Audio(), end = new Audio, ps = new Audio(), st = new Audio();
 
 
 		window.requestAnimationFrame = (function(){
@@ -61,7 +61,7 @@
 
 			ctx.fillStyle= "green";
 			ctx.font = "20px times new roman";
-			ctx.fillText("Score:   "+Score,canvas.width-100,15);
+			ctx.fillText("Score:   "+Score + " Speed: "+ speed,0,15);
 
 			ctx.fillStyle ="white";
 			for(var i = walls.length - 1; i >= 0; i--){
@@ -91,12 +91,13 @@
 
 		function act(){
 
-			if(lastPress == 32 && Game == true){ //Pause
+			if(lastPress == 32 && Game){ //Pause
 				lastPress= null;
 				pause = true;
+				ps.play();
 			}
 
-			if(lastPress==65 || lastPress == 37 && Game=== true){ //izquierda
+			if(lastPress==65 || lastPress == 37){ //izquierda
 				player.x -= speed;
 				pause = false;
 				if (player.x < 0 ) {
@@ -104,7 +105,7 @@
 				}
 			}
 
-			if(lastPress==68 || lastPress == 39 && Game=== true){ //derecha
+			if(lastPress==68 || lastPress == 39 && Game){ //derecha
 				player.x += speed;
 				pause = false;
 				if(player.x > canvas.width){
@@ -112,7 +113,7 @@
 				}
 			}
 
-			if(lastPress==87 || lastPress == 38 && Game=== true){ //arriba
+			if(lastPress==87 || lastPress == 38 && Game){ //arriba
 				player.y -= speed;
 				pause = false;
 				if (player.y < 20) {
@@ -120,7 +121,7 @@
 				}
 			}
 
-			if(lastPress==83 || lastPress == 40 && Game=== true){ //abajo
+			if(lastPress==83 || lastPress == 40 && Game){ //abajo
 				player.y += speed;
 				pause = false;
 				if (player.y > canvas.height) {
@@ -139,12 +140,14 @@
 				}
 				speed+= 0.2;
 				Score+= 5;
+				eat.play();
 			}
 
 			for(var i = walls.length - 1; i >= 0; i--){
 					if(player.intersects(walls[i])){
 						Game = false;
 						lastPress= null;
+						end.play();
 					}
 			}
 		}
@@ -153,6 +156,7 @@
 			window.requestAnimationFrame(run);
 			act();
 			paint(ctx);
+
 		}
 
 		function init(){
@@ -162,9 +166,10 @@
 			body.src = "assets/gusano.png";
 			apple.src = "assets/apple.png";
 
-			eat.src = "assts/.mp3";
-			end.src = "assts/.mp3";
-			ps.src = "assts/.mp3";
+			eat.src = "assets/eat.mp3";
+			end.src = "assets/end.mp3";
+			ps.src = "assets/ps.mp3";
+			st.src = "assets/comienzo.mp3";
 
 			player = new Rectangle(0,20,10,10);
 			food = new Rectangle(70,50,10,10);
