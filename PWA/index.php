@@ -23,6 +23,7 @@
 		<canvas id="canvas" width="500" height="250" ></canvas>
 
 	</div>
+	<script type="text/javascript" src="assets/js/jquery-3.5.1.min.js"></script>
 	<script type="text/javascript">
 		var canvas = null, ctx = null, x = 0, y = 0;
 		var lastPress = 65, speed = 5, player = null,
